@@ -30,7 +30,6 @@ class HelperFunctions:
             package_address = packages.retrieve(package_id).address
             package_address_id = HelperFunctions.get_address_id(addresses, package_address)
 
-
             current_data[package_id] = dijkstra_result[package_address_id]
 
 
@@ -50,6 +49,7 @@ class HelperFunctions:
         if Settings.debug:
             print(f"The next package is {shortest_path_product_id} with distance {current_data[shortest_path_product_id]}")
 
+        package_address = packages.retrieve(shortest_path_product_id).address
 
         return shortest_path_product_id, current_data[shortest_path_product_id], package_address
 
