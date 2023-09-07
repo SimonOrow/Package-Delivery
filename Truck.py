@@ -8,4 +8,5 @@ class Truck:
         self.speed_mph = 18
         self.current_address = "4001 South 700 East"
         self.time_elapsed = datetime.timedelta()
+        self.departure_time = datetime.timedelta()
         self.total_miles = 0

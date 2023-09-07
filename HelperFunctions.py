@@ -1,3 +1,4 @@
+from datetime import timedelta
 from WGUPSDistances import *
 from Settings import *
 
@@ -52,3 +53,48 @@ class HelperFunctions:
 
         return shortest_path_product_id, current_data[shortest_path_product_id], package_address
 
+
+    # Cheap method to have the table look nice without any imports.
+    @staticmethod
+    def special_print(str, isAddress):
+        base_length = 8
+        if isAddress == True:
+            base_length = 40
+
+        if len(str) < base_length:
+            diff = base_length - len(str)
+            str = str + (" " * diff)
+        return str
+
+
+    @staticmethod
+    def print_package_with_status(package_ids, packagesHashTable,  time):
+        for package_id in package_ids:
+
+            package = packagesHashTable.retrieve(package_id)
+
+            status = ""
+            if (time < package.corresponding_truck_departure_time) or package.corresponding_truck_departure_time == timedelta():
+                status = "At Hub"
+            elif package.corresponding_truck_departure_time < time < package.time_delivered:
+                status = "En route"
+            elif time > package.time_delivered:
+                status = "Delivered"
+            else:
+                # Note: we shouldn't ever reach this.
+                status = "Unknown"
+
+            deliveryTime = ""
+            if status != "Delivered":
+                deliveryTime = "N/A"
+            else:
+                deliveryTime = package.time_delivered
+
+
+            print(
+                "Package ID: " + HelperFunctions.special_print(str(package.id), False) + "\t| " +
+                "Package Address: " + HelperFunctions.special_print(str(package.address), True) + "\t| " +
+                "Package Deadline: " + HelperFunctions.special_print(str(package.delivery_deadline), False) + "\t| " +
+                "Package Status: " + HelperFunctions.special_print(status, False) + "\t| " +
+                "Time Delivered: " + HelperFunctions.special_print(str(deliveryTime), False) + "\t| "
+            )

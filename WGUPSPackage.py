@@ -1,4 +1,6 @@
 import csv
+import datetime
+
 
 class WGUPSPackage:
     def __init__(self, package_id, address, city, state, zip, delivery_deadline, weight, notes):
@@ -10,6 +12,8 @@ class WGUPSPackage:
         self.delivery_deadline = delivery_deadline
         self.weight = weight
         self.notes = notes
+        self.truck_id = 0
+        self.time_delivered = datetime.timedelta()
 
     @staticmethod
     def get_all_packages():
