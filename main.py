@@ -148,6 +148,22 @@ package9.zip = "84111"
 
 deliverForTruck(truck3)
 
+print("-----------")
+print("Truck 1 Total Miles Travelled: " + str(truck1.total_miles))
+print("Truck 1 time spent delivering packages: " + str(truck1.time_elapsed))
+print("Truck 1 Time Finished: " + str(truck1.departure_time + truck1.time_elapsed))
+print()
+print("Truck 2 Total Miles Travelled: " + str(truck2.total_miles))
+print("Truck 2 time spent delivering packages: " + str(truck2.time_elapsed))
+print("Truck 2 Time Finished: " + str(truck2.departure_time + truck2.time_elapsed))
+print()
+print("Truck 3 Total Miles Travelled: " + str(truck3.total_miles))
+print("Truck 3 time spent delivering packages: " + str(truck3.time_elapsed))
+print("Truck 3 Time Finished: " + str(truck3.departure_time + truck3.time_elapsed))
+print()
+print("Total milage of all trucks: " + str(truck1.total_miles + truck2.total_miles + truck3.total_miles))
+print("-----------")
+
 
 while True:
     print("Welcome to the WGUPS tool!")
