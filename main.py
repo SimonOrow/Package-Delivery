@@ -6,6 +6,8 @@ from WGUPSPackage import *
 from WGUPSDistances import *
 from Truck import *
 from HashTable import *
+from Settings import *
+
 # Truck 1
 # Priority packages (Packages marked with a time rather than EOD) and are available.
 # Added 19 which is marked EOD, but must be delivered with 14 and 15.
@@ -32,6 +34,29 @@ package_data = WGUPSPackage.get_all_packages()
 distances = Distances.get_distances_data()
 adddresses = Distances.get_addresses()
 
+
+def deliverForTruck(truck):
+
+    while len(truck.packages) != 0:
+
+        if Settings.debug:
+            print("Current: " + str(truck.packages))
+
+        truck_current_address_id = HelperFunctions.get_address_id(adddresses,truck.current_address)
+        dijkstra_result = Dijkstra.dijkstra_bidirectional_matrix(distances, truck_current_address_id)
+        package_delivered_id, distance, address = HelperFunctions.find_closest_next_package(dijkstra_result, truck, packagesHashTable)
+
+        truck.total_miles += distance
+        truck.time_elapsed += datetime.timedelta(hours=HelperFunctions.calculate_time_to_arrive(distance, truck.speed_mph))
+
+        truck.packages.remove(package_delivered_id)
+        truck.current_address = address
+
+        if Settings.debug:
+            print("We are now at " + address)
+
+        #product = HashTable.retrieve(package_delivered_id)
+
 # For all packages, add them to the hash table.
 for package in package_data:
     packagesHashTable.add(package.id, package)
@@ -57,30 +82,10 @@ for package_id in truck_3_packages:
 
 
 
-def deliverForTruck(truck):
-
-    while len(truck.packages) != 0:
-
-        print("Current: " + str(truck.packages))
-
-        truck_current_address_id = HelperFunctions.get_address_id(adddresses,truck.current_address)
-        dijkstra_result = Dijkstra.dijkstra_bidirectional_matrix(distances, truck_current_address_id)
-        package_delivered_id, distance, address = HelperFunctions.find_closest_next_package(dijkstra_result, truck, packagesHashTable)
-
-        truck.total_miles += distance
-        truck.time_elapsed += datetime.timedelta(hours=HelperFunctions.calculate_time_to_arrive(distance, truck.speed_mph))
-
-        truck.packages.remove(package_delivered_id)
-        truck.current_address = address
-
-        print("We are now at " + address)
-
-        #product = HashTable.retrieve(package_delivered_id)
-
 
 
 deliverForTruck(truck1)
+deliverForTruck(truck2)
 
-print()
 print(truck1.time_elapsed)
-print(truck1.total_miles)
+print(truck2.time_elapsed)
