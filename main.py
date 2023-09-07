@@ -137,6 +137,7 @@ truckToContinue.time_elapsed += datetime.timedelta(hours=HelperFunctions.calcula
 truck3.departure_time = (truckToContinue.departure_time + truckToContinue.time_elapsed)
 
 # Make the driver wait until 10:20 AM when correct package ID is provided for package #9
+# if they arrive before 10:20 AM.
 if truck3.departure_time < datetime.timedelta(hours=10, minutes=20):
     truck3.departure_time = datetime.timedelta(hours=10, minutes=20)
 
