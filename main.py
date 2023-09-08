@@ -21,12 +21,12 @@ truck_1_packages = [1, 13, 14, 15, 16, 19, 20, 29, 30, 31, 34, 37, 40]
 truck_2_packages = [3, 6, 17, 18, 25, 26, 27, 28, 32, 36, 38]
 
 # Truck 3
-# Will contain package with wrong address and all remaining packages
+# Will contain package with wrong address and all remaining packages.
 truck_3_packages = [2, 4, 5, 7, 8, 9, 10, 11, 12, 21, 22, 23, 24, 35, 39, 33]
 
 # OVERALL STRATEGY:
 # Load Truck 1 with packages that have delivery deadlines and include 19, so everything can make it on time.
-# Load Truck 2 with only items that must be in Truck 2 and those arriving at 9:05am.
+# Load Truck 2 with only items that must be in Truck 2 and those arriving at 9:05am. Truck leaves 9:05am.
 # Load Truck 3 with everything else.
 
 packagesHashTable = HashTable(40)
@@ -43,19 +43,27 @@ def deliverForTruck(truck):
         if Settings.debug:
             print("Current: " + str(truck.packages))
 
+        # Take current address of truck, and find corresponding address of truck.
         truck_current_address_id = HelperFunctions.get_address_id(adddresses,truck.current_address)
+
+        # Perform Dijkstra algorithm with starting node being where the truck is at.
         dijkstra_result = Dijkstra.dijkstra_bidirectional_matrix(distances, truck_current_address_id)
+
+        # Call find_closest_next_package which finds the next closest package to deliver, its distance, and its address
         package_delivered_id, distance, address = HelperFunctions.find_closest_next_package(dijkstra_result, truck, packagesHashTable)
 
+        # Add to the total miles and the total amount of time.
         truck.total_miles += distance
         truck.time_elapsed += datetime.timedelta(hours=HelperFunctions.calculate_time_to_arrive(distance, truck.speed_mph))
 
+        # Remove the package id from the list of packages IDs on the truck and update address.
         truck.packages.remove(package_delivered_id)
         truck.current_address = address
 
         if Settings.debug:
             print("We are now at " + address)
 
+        # Update package object with the time delivered.
         current_package = packagesHashTable.retrieve(package_delivered_id)
         # Time package was delivered is equal to time truck left plus the time elapsed since leaving.
         current_package.time_delivered = truck.departure_time + truck.time_elapsed
@@ -70,6 +78,8 @@ for package in package_data:
 
 
 # Establish trucks
+
+# Initialize trucks with an ID, add the package iDs to it, and set the departure time.
 
 truck1 = Truck(truck_id=1)
 truck1.departure_time = datetime.timedelta(hours=8, minutes=0)

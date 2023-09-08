@@ -25,7 +25,6 @@ class Dijkstra:
             # Change node's visited status to true.
             visited[min_node] = True
 
-            # Update distances to neighbors
             for neighbor in range(node_count):
 
                 # We have a bidirectional array/table provided for the distances.
@@ -42,20 +41,3 @@ class Dijkstra:
                     distance[neighbor] = distance[min_node] + main_distance
 
         return distance
-
-
-
-
-
-
-
-# Example usage:
-# Define a bidirectional distance matrix where matrix[i][j] represents the distance from node i to node j
-
-# start_node = 0
-# shortest_distances = dijkstra_bidirectional_matrix(distance_matrix, start_node)
-#
-# print(shortest_distances)
-# print("Shortest Distances from Start Node:")
-# for node, distance in enumerate(shortest_distances):
-#     print(f"To Node {node}: {distance}")

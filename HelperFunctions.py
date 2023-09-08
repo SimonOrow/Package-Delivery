@@ -6,6 +6,7 @@ class HelperFunctions:
 
     @staticmethod
     def calculate_time_to_arrive(distance_miles, speed_mph):
+        # time = distance/speed
         return distance_miles/speed_mph
 
     @staticmethod
@@ -16,9 +17,13 @@ class HelperFunctions:
         if "Station" in address_to_find:
             address_to_find = address_to_find.replace("Station", "Sta")
 
+        # Find the correct address.
+        # Check if package address is a substring of an address in table, and get corresponding row ID.
         for address in address_list:
             if address_to_find in address:
                 return address_list.index(address)
+
+        # Should not reach this, but throw an exception to easily track the issue.
         raise Exception(f"Could not find the address for {address_to_find}")
 
     @staticmethod
@@ -44,6 +49,7 @@ class HelperFunctions:
             print("Dijkstra Result: " + str(dijkstra_result))
             print("Data: " + str(current_data))
 
+        # Find key with the minimum value. Represents the address with minimum distance.
         shortest_path_product_id = min(current_data, key=current_data.get)
 
         if Settings.debug:
@@ -53,8 +59,8 @@ class HelperFunctions:
 
         return shortest_path_product_id, current_data[shortest_path_product_id], package_address
 
-
     # Cheap method to have the table look nice without any imports.
+    # Adds enough spacing to make a pretty table.
     @staticmethod
     def special_print(str, isAddress):
         base_length = 8
@@ -71,8 +77,10 @@ class HelperFunctions:
     def print_package_with_status(package_ids, packagesHashTable,  time):
         for package_id in package_ids:
 
+            # Get the package from the hash table.
             package = packagesHashTable.retrieve(package_id)
 
+            # Determine status based on truck time and package delivery time.
             status = ""
             if (time < package.corresponding_truck_departure_time) or package.corresponding_truck_departure_time == timedelta():
                 status = "At Hub"
@@ -84,6 +92,7 @@ class HelperFunctions:
                 # Note: we shouldn't ever reach this.
                 status = "Unknown"
 
+            # If delivered, provide the delivery time.
             deliveryTime = ""
             if status != "Delivered":
                 deliveryTime = "N/A"
