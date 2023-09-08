@@ -142,9 +142,22 @@ distance_to_hub = dijkstra_result[0]
 truckToContinue.total_miles += distance_to_hub
 truckToContinue.time_elapsed += datetime.timedelta(hours=HelperFunctions.calculate_time_to_arrive(distance_to_hub, truckToContinue.speed_mph))
 
+truck3 = Truck(truck_id=3)
 
 # Driver gets on truck 3 at the time that they arrived back to the hub.
 truck3.departure_time = (truckToContinue.departure_time + truckToContinue.time_elapsed)
+
+for package_id in truck_3_packages:
+    truck3.packages.add(package_id)
+    truck3.packages_on_board_count = len(truck3.packages)
+    package = packagesHashTable.retrieve(package_id)
+    package.truck_id = 3
+
+    package = packagesHashTable.retrieve(package_id)
+    package.truck_id = 3
+    package.corresponding_truck_departure_time = truck3.departure_time
+
+
 
 # Make the driver wait until 10:20 AM when correct package ID is provided for package #9
 # if they arrive before 10:20 AM.
@@ -161,15 +174,15 @@ deliverForTruck(truck3)
 
 print("-----------")
 print("Truck 1 Total Miles Travelled: " + str(truck1.total_miles))
-print("Truck 1 time spent delivering packages: " + str(truck1.time_elapsed))
+print("Truck 1 time spent delivering packages: " + str(truck1.time_elapsed) + " hours")
 print("Truck 1 Time Finished: " + str(truck1.departure_time + truck1.time_elapsed))
 print()
 print("Truck 2 Total Miles Travelled: " + str(truck2.total_miles))
-print("Truck 2 time spent delivering packages: " + str(truck2.time_elapsed))
+print("Truck 2 time spent delivering packages: " + str(truck2.time_elapsed) + " hours")
 print("Truck 2 Time Finished: " + str(truck2.departure_time + truck2.time_elapsed))
 print()
 print("Truck 3 Total Miles Travelled: " + str(truck3.total_miles))
-print("Truck 3 time spent delivering packages: " + str(truck3.time_elapsed))
+print("Truck 3 time spent delivering packages: " + str(truck3.time_elapsed) + " hours")
 print("Truck 3 Time Finished: " + str(truck3.departure_time + truck3.time_elapsed))
 print()
 print("Total milage of all trucks: " + str(truck1.total_miles + truck2.total_miles + truck3.total_miles))
