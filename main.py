@@ -24,6 +24,10 @@ truck_2_packages = [3, 6, 17, 18, 25, 26, 27, 28, 32, 36, 38]
 # Will contain package with wrong address and all remaining packages.
 truck_3_packages = [2, 4, 5, 7, 8, 9, 10, 11, 12, 21, 22, 23, 24, 35, 39, 33]
 
+# The total time needed to deliver the 40 packages.
+total_completion_time = datetime.timedelta()
+
+
 # OVERALL STRATEGY:
 # Load Truck 1 with packages that have delivery deadlines and include 19, so everything can make it on time.
 # Load Truck 2 with only items that must be in Truck 2 and those arriving at 9:05am. Truck leaves 9:05am.
@@ -71,6 +75,10 @@ def deliverForTruck(truck):
         print("Delivered package " + str(current_package.id) + " at " + str(current_package.time_delivered))
     print()
 
+    # Make the time all packages have officially been delivered the time that the last truck finished.
+    global total_completion_time
+    if (truck.departure_time + truck.time_elapsed) > total_completion_time:
+        total_completion_time = (truck.departure_time + truck.time_elapsed)
 
 # For all packages, add them to the hash table.
 for package in package_data:
@@ -147,6 +155,16 @@ truck3 = Truck(truck_id=3)
 # Driver gets on truck 3 at the time that they arrived back to the hub.
 truck3.departure_time = (truckToContinue.departure_time + truckToContinue.time_elapsed)
 
+# Make the driver wait until 10:20 AM when correct package ID is provided for package #9
+# if they managed to arrive before 10:20 AM.
+if truck3.departure_time < datetime.timedelta(hours=10, minutes=20):
+    truck3.departure_time = datetime.timedelta(hours=10, minutes=20)
+
+# Update the address and start the route.
+package9 = packagesHashTable.retrieve(9)
+package9.address = "410 S State St"
+package9.zip = "84111"
+
 for package_id in truck_3_packages:
     truck3.packages.add(package_id)
     truck3.packages_on_board_count = len(truck3.packages)
@@ -156,18 +174,6 @@ for package_id in truck_3_packages:
     package = packagesHashTable.retrieve(package_id)
     package.truck_id = 3
     package.corresponding_truck_departure_time = truck3.departure_time
-
-
-
-# Make the driver wait until 10:20 AM when correct package ID is provided for package #9
-# if they arrive before 10:20 AM.
-if truck3.departure_time < datetime.timedelta(hours=10, minutes=20):
-    truck3.departure_time = datetime.timedelta(hours=10, minutes=20)
-
-# Update the address and start the route.
-package9 = packagesHashTable.retrieve(9)
-package9.address = "410 S State St"
-package9.zip = "84111"
 
 
 deliverForTruck(truck3)
@@ -186,6 +192,7 @@ print("Truck 3 time spent delivering packages: " + str(truck3.time_elapsed) + " 
 print("Truck 3 Time Finished: " + str(truck3.departure_time + truck3.time_elapsed))
 print()
 print("Total milage of all trucks: " + str(truck1.total_miles + truck2.total_miles + truck3.total_miles))
+print("Time at which all packages officially delivered: " + str(total_completion_time))
 print("-----------")
 
 
